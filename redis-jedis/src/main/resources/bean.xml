@@ -1,27 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<!-- <context:property-placeholder location="classpath:person.properties"/>
-	包扫描、只要标注了@Controller、@Service、@Repository，@Component
-	 <context:component-scan base-package="com.atguigu" use-default-filters="false"></context:component-scan>
-	<bean id="person" class="com.atguigu.bean.Person"  scope="prototype" >
-		<property name="age" value="${}"></property>
-		<property name="name" value="zhangsan"></property>
+	<!-- 启用组件注解扫描 -->
+	<context:component-scan base-package="com.zhht" />
+
+	<!-- 默课网方式 -->
+	<bean id="redisClusterFactory" class="com.zhht.util.JedisClusterFactory" init-method="init" destroy-method="destory">
+		<property name="password" value="123456" />
+		<property name="timeOut" value="5000" />
+		<property name="hostPortList">
+			<list>
+				<value>192.168.199.131:8000</value>
+				<value>192.168.199.131:8001</value>
+				<value>192.168.199.131:8002</value>
+				<value>192.168.199.131:8003</value>
+				<value>192.168.199.131:8004</value>
+				<value>192.168.199.131:8006</value>
+			</list>
+		</property>
 	</bean>
+	<bean id="jedisClusterf" factory-bean="redisClusterFactory" factory-method="getCluster" />
+
+	<!-- 网上例子方式 
+	https://www.iteye.com/blog/xyqck163-2211108
 	
-	开启基于注解版的切面功能
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-	
-	<tx:annotation-driven/>
- -->
- 	<bean >
- 
+	<bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+		<property name="maxWaitMillis" value="-1" />
+		<property name="maxTotal" value="1000" />
+		<property name="minIdle" value="8" />
+		<property name="maxIdle" value="100" />
+	</bean>
+
+	<bean id="jedisCluster" class="com.zhht.util.cluster.JedisClusterFactory">
+		<property name="addressConfig">
+			<value>classpath:connect-redis.properties</value>
+		</property>
+		<property name="addressKeyPrefix" value="address" />   
+
+		<property name="timeout" value="300000" />
+		<property name="maxRedirections" value="6" />
+		<property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+	</bean>
+	 -->
 </beans>
